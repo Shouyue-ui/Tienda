@@ -1,4 +1,4 @@
-"Estado","Nivel_de_rentabilidad","Producto","Unidades_vendidas","beneficio_total_num"
+"estado","nivel","producto","unidades","beneficio_total"
 "RENTABLE","BAJA","Modelos de Alta Gama AMD/NVIDIA","1","126"
 "RENTABLE","BAJA","Smartphone de Alta Gama","1","103"
 "RENTABLE","BAJA","Xreal One Pro","2","105"
@@ -48,3 +48,4 @@
 "RENTABLE","ALTA","IBM Quantum System One","3","11340000"
 "RENTABLE","ALTA","Robothespian de Engineered Arts","1","21000"
 "RENTABLE","ALTA","NVIDIA Blackwell GB200 NVL72","2","10836000"
+
