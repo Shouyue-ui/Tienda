@@ -15,6 +15,7 @@ const CONFIG = {
     ventasEstado: "data/ventas_por_estado.csv",
     topProductos: "data/top_productos_beneficio.csv",
     detalle: "data/detalle.csv",
+    productomasvendido: "data/producto_vendidos.csv",
   },
 
   // Cabeceras esperadas en cada CSV
@@ -24,6 +25,7 @@ const CONFIG = {
     ventasEstado: ["estado", "num_ventas", "unidades"],
     topProductos: ["producto", "beneficio_total", "unidades"],
     detalle: ["estado", "nivel", "producto", "unidades", "beneficio_total"],
+    productomasvendido: ["producto", "unidades_vendias"]
   },
 
   // Qué columnas usar para filtros (en detalle.csv)
