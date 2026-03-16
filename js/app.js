@@ -341,7 +341,7 @@ async function init() {
     setKPI("kpiUnidades", unidades);
     setKPI("kpiBeneficioTotal", beneficio.toFixed(2));
     setKPI("kpiBeneficioMedio", num ? (beneficio / num).toFixed(2) : "0.00");
-
+    setKPI("kpiProductoMasVendido",productos);
     if (CONFIG.debug) {
       uiMsg("info", "Filtro aplicado", `Estado="${estado || "Todos"}" | Nivel="${nivel || "Todos"}" | Filas=${num}`);
     }
