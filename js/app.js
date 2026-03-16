@@ -246,6 +246,42 @@ function renderChartVentasEstado(rows) {
     data: { labels, datasets: [{ label: "Número de ventas", data }] }
   });
 }
+let chartBeneficioProducto = null;
+
+function renderChartBeneficioProducto(rows) {
+  const canvas = document.getElementById("chartBeneficioProducto");
+  if (!canvas) return;
+
+  const labels = rows.map(r => r["producto"]);
+  const data = rows.map(r => Number(r["beneficio_total"] || 0));
+
+  if (chartBeneficioProducto) {
+    chartBeneficioProducto.destroy();
+  }
+
+  chartBeneficioProducto = new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Beneficio total (€)",
+        data: data
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
 
 /* ========= MAIN ========= */
 async function init() {
@@ -253,13 +289,23 @@ async function init() {
   uiMsg("info", "Cargando dashboard…", "Si algo falla, aquí verás el motivo (CSV inexistente, columnas mal nombradas, etc.).");
 
   // 1) Cargar CSV agregados
-  const [kpis, beneficioNivel, ventasEstado, topProductos] = await Promise.all([
-    fetchCSV(CONFIG.files.kpis),
-    fetchCSV(CONFIG.files.beneficioNivel),
-    fetchCSV(CONFIG.files.ventasEstado),
-    fetchCSV(CONFIG.files.topProductos),
-    fetchCSV(CONFIG.files.productovendidos),
-  ]);
+  const [
+     kpisRows,
+     beneficioNivelRows,
+     ventasEstadoRows,
+     topProductosRows,
+     detalleRows,
+     beneficioProductoRows
+  ] = await Promise.all([
+  loadCSV(CONFIG.files.kpis),
+  loadCSV(CONFIG.files.beneficioNivel),
+  loadCSV(CONFIG.files.ventasEstado),
+  loadCSV(CONFIG.files.topProductos),
+  loadCSV(CONFIG.files.detalle),
+  loadCSV(CONFIG.files.productoVendido)
+]);
+
+renderChartBeneficioProducto(beneficioProductoRows);
 
   logDebug("kpis:", kpis);
   logDebug("beneficioNivel:", beneficioNivel);
