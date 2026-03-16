@@ -25,7 +25,7 @@ const CONFIG = {
     ventasEstado: ["estado", "num_ventas", "unidades"],
     topProductos: ["producto", "beneficio_total", "unidades"],
     detalle: ["estado", "nivel", "producto", "unidades", "beneficio_total"],
-    productomasvendido: ["producto", "unidades_vendias"]
+    productomasvendido: ["producto", "unidades_vendidas"]
   },
 
   // Qué columnas usar para filtros (en detalle.csv)
@@ -258,6 +258,7 @@ async function init() {
     fetchCSV(CONFIG.files.beneficioNivel),
     fetchCSV(CONFIG.files.ventasEstado),
     fetchCSV(CONFIG.files.topProductos),
+    fetchCSV(CONFIG.files.productovendidos),
   ]);
 
   logDebug("kpis:", kpis);
