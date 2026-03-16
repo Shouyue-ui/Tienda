@@ -329,20 +329,53 @@ async function init() {
   fillSelect("filtroEstado", uniqueValues(detalle, CONFIG.filters.estadoCol), "Todos los estados");
   fillSelect("filtroNivel", uniqueValues(detalle, CONFIG.filters.nivelCol), "Todos los niveles");
 
-  function updateFiltered() {
-    const estado = filtroEstado.value;
-    const nivel = filtroNivel.value;
-    const filtrado = applyFilters(detalle, estado, nivel);
+ function updateFiltered() {
+  const estado = document.getElementById("filtroEstado").value;
+  const nivel = document.getElementById("filtroNivel").value;
 
-    const num = filtrado.length;
-    const unidades = filtrado.reduce((acc, r) => acc + Number(r[CONFIG.kpiFromDetalle.unidadesCol] || 0), 0);
-    const beneficio = filtrado.reduce((acc, r) => acc + Number(r[CONFIG.kpiFromDetalle.beneficioCol] || 0), 0);
+  const filtrado = detalle.filter(r => {
+    const okEstado = !estado || r["estado"] === estado;
+    const okNivel = !nivel || r["nivel"] === nivel;
+    return okEstado && okNivel;
+  });
 
-    setKPI("kpiRegistros", num);
-    setKPI("kpiUnidades", unidades);
-    setKPI("kpiBeneficioTotal", beneficio.toFixed(2));
-    setKPI("kpiBeneficioMedio", num ? (beneficio / num).toFixed(2) : "0.00");
-    setKPI("kpiProductoMasVendido",productos);
+  const numRegistros = filtrado.length;
+  const unidades = filtrado.reduce((acc, r) => acc + Number(r["unidades"] || 0), 0);
+  const beneficio = filtrado.reduce((acc, r) => acc + Number(r["beneficio_total"] || 0), 0);
+  const beneficioMedio = numRegistros ? beneficio / numRegistros : 0;
+
+  setKPI("kpiRegistros", numRegistros);
+  setKPI("kpiUnidades", unidades);
+  setKPI("kpiBeneficioTotal", beneficio.toFixed(2) + " €");
+  setKPI("kpiBeneficioMedio", beneficioMedio.toFixed(2) + " €");
+
+  // KPI nuevo: producto más vendido
+  const ventasPorProducto = {};
+
+  filtrado.forEach(r => {
+    const producto = r["producto"] || "Sin nombre";
+    const unidades = Number(r["unidades"] || 0);
+
+    if (!ventasPorProducto[producto]) {
+      ventasPorProducto[producto] = 0;
+    }
+
+    ventasPorProducto[producto] += unidades;
+  });
+
+  let productoMasVendido = "-";
+  let maxUnidades = -1;
+
+  for (const producto in ventasPorProducto) {
+    if (ventasPorProducto[producto] > maxUnidades) {
+      maxUnidades = ventasPorProducto[producto];
+      productoMasVendido = producto;
+    }
+  }
+
+  setKPI("kpiProductoMasVendido", productoMasVendido);
+}
+
     if (CONFIG.debug) {
       uiMsg("info", "Filtro aplicado", `Estado="${estado || "Todos"}" | Nivel="${nivel || "Todos"}" | Filas=${num}`);
     }
